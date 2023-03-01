@@ -1,0 +1,24 @@
+{
+   "browser_action": {
+      "default_icon": "icon-16.png",
+      "default_popup": "popup.html",
+      "icons": [ "icon-16.png" ]
+   },
+   "content_scripts": [ {
+      "js": [ "jquery.min.js", "background.js" ],
+      "matches": [ "http://*/*", "https://*/*" ]
+   } ],
+   "description": "Save job listing details to a spreadsheet when you click apply!",
+   "icons": {
+      "128": "icon-128.png",
+      "16": "icon-16.png",
+      "48": "icon-48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnAuaVNJIvB8ngSV8PEb9TFEUTBNiNF7cxVn3ca7gIE8x3fjIUUCJkkVYBSg9PvGn3UlrSIE4zBLMAfqp+HaAFRNPQqtHl873ZGmhUNihFl1hZBv/CsoDTcc62IT22Bh7b8CuqVjTyyPkJA7SZ0B4WBxHMfjIVyA+TXzSWSQu8am9SmDwcn2VQ7i3TzJDpEke7ON+ZM27zz1sBIMxiDNRgbwYTLoGtAvEm/CRQCXLYk/hbU0tVG6e3OO8cZ5wQoA+3gUNMWP5dkLQNNokQpPP/EaWuUF5BFwOPFB2c7dSYMqE/Yx/Vat/ccwc9CdtpV+CzCuAdb+iyaiNVbaXcQhllQIDAQAB",
+   "manifest_version": 2,
+   "name": "Job Buddy",
+   "permissions": [ "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0",
+   "web_accessible_resources": [ "icon.png", "icon-full.png" ]
+}
