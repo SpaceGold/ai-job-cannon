@@ -16,8 +16,7 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ animal: animalInput }),
-      });
-  
+      });  
       const data = await response.json();
   
       if (response.status !== 200) {
@@ -25,7 +24,6 @@ export default function Home() {
       }
   
       setResult(data.result);
-      // console.log(data.result); // Logging the generated names to the console
     } catch(error) {
       console.error(error);
       alert(error.message);
@@ -34,7 +32,6 @@ export default function Home() {
   
 
   useEffect(() => {
-    console.log(result);
   }, [result]);
 
   return (
@@ -51,11 +48,11 @@ export default function Home() {
           <input
             type="text"
             name="animal"
-            placeholder="Enter an animal"
+            placeholder="Enter an topic"
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
-          <input type="submit" value="Generate names" />
+          <input type="submit" value="Generate" />
         </form>
         <div className={styles.result}>{result}</div>
       </main>

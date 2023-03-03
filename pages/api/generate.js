@@ -14,26 +14,23 @@ export default async function (req, res) {
     });
     return;
   }
-
   const animal = req.body.animal || '';
   if (animal.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
+        message: "Please enter a valid animal !!?!?!!",
       }
     });
     return;
   }
 
   try {
-    console.log('starting to make a call')
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       // prompt: generatePrompt(animal),
-      temperature: 0.6,
+      temperature: 0.999,
       messages: [{"role":"user", "content":generatePrompt(animal)}]
     });
-    console.log('res ', res)
     res.status(200).json({ result: completion.data.choices[0].message.content });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
@@ -54,5 +51,5 @@ export default async function (req, res) {
 function generatePrompt(animal) {
   const capitalizedAnimal =
     animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `write a joke about ${capitalizedAnimal}`;
+  return `make up something unbelievable about a ${capitalizedAnimal}`;
 }
