@@ -1,14 +1,13 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./index.module.css";
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState();
 
   async function onSubmit(event) {
     event.preventDefault();
-  
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -17,26 +16,23 @@ export default function Home() {
         },
         body: JSON.stringify({ animal: animalInput }),
       });
-  
+
       const data = await response.json();
-  
       if (response.status !== 200) {
         throw data.error || new Error(`Request failed with status ${response.status}`);
       }
-  
+
       setResult(data.result);
-      // console.log(data.result); // Logging the generated names to the console
+      setAnimalInput("");
     } catch(error) {
+      // Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
   }
-  
 
-  useEffect(() => {
-    console.log(result);
-  }, [result]);
-
+  // TODO lvlv this is where the 'jsx' style template is returned, look up React jsx stuff
+  // similar to HTML but different
   return (
     <div>
       <Head>
@@ -51,7 +47,7 @@ export default function Home() {
           <input
             type="text"
             name="animal"
-            placeholder="Enter an animal"
+            placeholder="Enter a noodleß"
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
