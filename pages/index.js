@@ -1,36 +1,15 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "./index.module.css";
-// import * as db from "../pages/api/db_queries";
-
-// const { Client } = require("pg");
-// const dotenv = require("dotenv")
-// dotenv.config()
-//
-// const connectDb = async () => {
-//     try {
-//         const client = new Client({
-//             user: process.env.PGUSER,
-//             host: process.env.PGHOST,
-//             database: process.env.PGDATABASE,
-//             port: process.env.PGPORT
-//         })
-//
-//         await client.connect()
-//         const res = await client.query('SELECT * FROM some_table')
-//         console.log(res)
-//         await client.end()
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-//
-// connectDb()
 
 export default function Home() {
+  const [preamblePhraseInput, setPreamblePhraseInput] = useState("");
+  const [promptInput, setPromptInput] = useState("");
+  const [connectorPhraseInput, setConnectorPhraseInput] = useState("");
   const [topicInput, setTopicInput] = useState("");
   const [result, setResult] = useState("");
-
+  const [isWorkRelated, setIsWorkRelated] = useState(false);
+  // TODO for Adam: watch Tyler McGinnis React videos
   async function onSubmit(event) {
     event.preventDefault();
 
@@ -40,7 +19,13 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ topic: topicInput }),
+        // unused?
+        body: JSON.stringify({
+          task: topicInput,
+          task2: preamblePhraseInput,
+          context: connectorPhraseInput,
+          topic: promptInput,
+        }),
       });
       const data = await response.json();
       if (response.status !== 200) {
@@ -59,6 +44,10 @@ export default function Home() {
 
   useEffect(() => {}, [result]);
 
+  const handleChange = () => {
+    setIsWorkRelated(!isWorkRelated);
+  };
+
   return (
     <div>
       <Head>
@@ -72,8 +61,29 @@ export default function Home() {
         <form onSubmit={onSubmit}>
           <input
             type="text"
+            name="preamblePhrase"
+            placeholder="preamble e.g. 'Write a'"
+            value={preamblePhraseInput}
+            onChange={(e) => setPreamblePhraseInput(e.target.value)}
+          />
+          <input
+            type="text"
+            name="prompt"
+            placeholder="prompt e.g. 'friendly note expressing interest in a job'"
+            value={promptInput}
+            onChange={(e) => setPromptInput(e.target.value)}
+          />
+          <input
+            type="text"
+            name="connectorPhrase"
+            placeholder="connecting phrase e.g. 'as though you yourself are a'"
+            value={connectorPhraseInput}
+            onChange={(e) => setConnectorPhraseInput(e.target.value)}
+          />
+          <input
+            type="text"
             name="topic"
-            placeholder="Enter a topic (optional)"
+            placeholder="topic or role e.g. 'professional drag queen'"
             value={topicInput}
             onChange={(e) => setTopicInput(e.target.value)}
           />
@@ -84,6 +94,7 @@ export default function Home() {
               id="is_work_related"
               name="is_work_related"
               value="is_work_related"
+              onChange={handleChange}
             />
             <label htmlFor="is_work_related">Work Related?</label>
           </div>
