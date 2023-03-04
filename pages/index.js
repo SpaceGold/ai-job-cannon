@@ -1,6 +1,31 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "./index.module.css";
+// import * as db from "../pages/api/db_queries";
+
+// const { Client } = require("pg");
+// const dotenv = require("dotenv")
+// dotenv.config()
+//
+// const connectDb = async () => {
+//     try {
+//         const client = new Client({
+//             user: process.env.PGUSER,
+//             host: process.env.PGHOST,
+//             database: process.env.PGDATABASE,
+//             port: process.env.PGPORT
+//         })
+//
+//         await client.connect()
+//         const res = await client.query('SELECT * FROM some_table')
+//         console.log(res)
+//         await client.end()
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+//
+// connectDb()
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
@@ -8,7 +33,7 @@ export default function Home() {
 
   async function onSubmit(event) {
     event.preventDefault();
-  
+
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -16,23 +41,23 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ animal: animalInput }),
-      });  
+      });
       const data = await response.json();
-  
       if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
+        throw (
+          data.error ||
+          new Error(`Request failed with status ${response.status}`)
+        );
       }
-  
+
       setResult(data.result);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       alert(error.message);
     }
   }
-  
 
-  useEffect(() => {
-  }, [result]);
+  useEffect(() => {}, [result]);
 
   return (
     <div>
