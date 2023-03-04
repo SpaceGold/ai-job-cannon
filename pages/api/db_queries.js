@@ -6,14 +6,20 @@ const pool = new Pool({
   port: 5432,
 });
 
-const getWorkPlay = (request, response) => {
-  pool.query("SELECT * FROM work_play ORDER BY id ASC", (error, results) => {
-    if (error) {
-      console.log("err ", error);
-      throw error;
+// id | json_dump | is_work_related | prompt_vars | prompt | response
+const getWorkPlay = async (request, response, completion) => {
+  console.log("completion data ", completion.data.choices[0].message.content);
+  return pool.query(
+    "INSERT INTO",
+    (error, results) => {
+      if (error) {
+        console.log("err ", error);
+        throw error;
+      }
+      //   console.log("db_query results ", results);
+      //   return results;
+      // response.status(200).json(results.rows);
     }
-    console.log("results ", resutls);
-    response.status(200).json(results.rows);
-  });
+  );
 };
 export { getWorkPlay };

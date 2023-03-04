@@ -28,7 +28,7 @@ import styles from "./index.module.css";
 // connectDb()
 
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
+  const [topicInput, setTopicInput] = useState("");
   const [result, setResult] = useState("");
 
   async function onSubmit(event) {
@@ -40,7 +40,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ animal: animalInput }),
+        body: JSON.stringify({ topic: topicInput }),
       });
       const data = await response.json();
       if (response.status !== 200) {
@@ -63,21 +63,30 @@ export default function Home() {
     <div>
       <Head>
         <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
+        <link rel="icon" href="/cannon.png" />
       </Head>
 
       <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
-        <h3>Name my pet</h3>
+        <img src="/cannon.png" className={styles.icon} />
+        <h3>Job Cannon</h3>
         <form onSubmit={onSubmit}>
           <input
             type="text"
-            name="animal"
-            placeholder="Enter an topic"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
+            name="topic"
+            placeholder="Enter a topic (optional)"
+            value={topicInput}
+            onChange={(e) => setTopicInput(e.target.value)}
           />
-          <input type="submit" value="Generate" />
+          <div className={styles.submitContainer}>
+            <input type="submit" value="Generate" />
+            <input
+              type="checkbox"
+              id="is_work_related"
+              name="is_work_related"
+              value="is_work_related"
+            />
+            <label htmlFor="is_work_related">Work Related?</label>
+          </div>
         </form>
         <div className={styles.result}>{result}</div>
       </main>

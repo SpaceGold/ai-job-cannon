@@ -16,8 +16,8 @@ export default async function (req, res) {
     });
     return;
   }
-  const animal = req.body.animal || "";
-  if (animal.trim().length === 0) {
+  const topic = req.body.topic || "";
+  if (topic.trim().length === 0) {
     // az what is this fitler criteria?
     res.status(400).json({
       error: {
@@ -31,15 +31,17 @@ export default async function (req, res) {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0.01,
-      messages: [{ role: "user", content: generatePrompt(animal) }],
+      messages: [{ role: "user", content: generatePrompt(topic) }],
     });
-    const dbRes = await getWorkPlay(req, res);
-    console.log("dbREs ", dbRes);
+
+    // json_dump | is_work_related | prompt_vars | prompt | response
+
+    const dbRes = await getWorkPlay(req, res, completion);
+    console.log("dbRes, sending real res right after.. ", dbRes);
 
     res
       .status(200)
       .json({ result: completion.data.choices[0].message.content });
-    writeOut(result);
   } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -56,8 +58,8 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `very very briefly describe ${capitalizedAnimal} doing something super silly`;
+function generatePrompt(topic) {
+  const capitalizedTopic =
+    topic[0].toUpperCase() + topic.slice(1).toLowerCase();
+  return `very very briefly describe ${capitalizedTopic} doing something super silly`;
 }
