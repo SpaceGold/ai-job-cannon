@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from "openai";
 import { getWorkPlay } from "./db_queries";
+// import Markdown from 'markdown-it';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,16 +17,9 @@ export default async function (req, res) {
     });
     return;
   }
-  const preamblePhrase = req.body.topic || "";
   const topic = req.body.topic || "";
-  const connectorPhrase = req.body.topic || "";
-  const prompt = req.body.prompt || "";
-  const isWorkRelated = req.body.isWorkRelated;
-
-
-  console.log("work related? ", isWorkRelated);
-
   if (topic.trim().length === 0) {
+    // az what is this fitler criteria?
     res.status(400).json({
       error: {
         message: "Please enter a valid topic",
@@ -34,22 +28,11 @@ export default async function (req, res) {
     return;
   }
 
-  // buggy:
-  // if (prompt.trim().length === 0) {
-  //   res.status(400).json({
-  //     error: {
-  //       message: "Please enter a valid prompt",
-  //     },
-  //   });
-  //   return;
-  // }
-
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      temperature: 1.5,
-      messages: [{ role: "user", content: generatePrompt(preamblePhrase, 
-        prompt, connectorPhrase, topic) }],
+      temperature: 0.01,
+      messages: [{ role: "user", content: generatePrompt(topic) }],
     });
 
     // json_dump | is_work_related | prompt_vars | prompt | response
@@ -76,17 +59,8 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(preamblePhrase, prompt, connectorPhrase, topic) {
-  // return `write a ${prompt} as though you yourself are a ${topic}`;
-  return `${preamblePhrase} ${prompt} ${connectorPhrase} ${topic}`;
-  
+function generatePrompt(topic) {
+  const capitalizedTopic =
+    topic[0].toUpperCase() + topic.slice(1).toLowerCase();
+  return `give a description in the form of a bulleted list or table with relevant columns about ${capitalizedTopic}`;
 }
-
-
-{/* <TextField
-  id="first-name"
-  label="Name"
-  value={this.state.name}
-  onChange={this.handleChange('name')}
-  margin="normal"
-/> */}

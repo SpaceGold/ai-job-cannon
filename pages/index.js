@@ -1,15 +1,13 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "./index.module.css";
+import ReactMarkdown from "react-markdown";
+import Markdown from "markdown-it";
 
 export default function Home() {
-  const [preamblePhraseInput, setPreamblePhraseInput] = useState("");
-  const [promptInput, setPromptInput] = useState("");
-  const [connectorPhraseInput, setConnectorPhraseInput] = useState("");
   const [topicInput, setTopicInput] = useState("");
   const [result, setResult] = useState("");
-  const [isWorkRelated, setIsWorkRelated] = useState(false);
-  // TODO for Adam: watch Tyler McGinnis React videos
+
   async function onSubmit(event) {
     event.preventDefault();
 
@@ -19,13 +17,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        // unused?
-        body: JSON.stringify({
-          task: topicInput,
-          task2: preamblePhraseInput,
-          context: connectorPhraseInput,
-          topic: promptInput,
-        }),
+        body: JSON.stringify({ topic: topicInput }),
       });
       const data = await response.json();
       if (response.status !== 200) {
@@ -42,11 +34,10 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {}, [result]);
 
-  const handleChange = () => {
-    setIsWorkRelated(!isWorkRelated);
-  };
+  const md = Markdown();
+  const html_result = md.render(result);
+  useEffect(() => {}, [html_result]);
 
   return (
     <div>
@@ -61,29 +52,8 @@ export default function Home() {
         <form onSubmit={onSubmit}>
           <input
             type="text"
-            name="preamblePhrase"
-            placeholder="preamble e.g. 'Write a'"
-            value={preamblePhraseInput}
-            onChange={(e) => setPreamblePhraseInput(e.target.value)}
-          />
-          <input
-            type="text"
-            name="prompt"
-            placeholder="prompt e.g. 'friendly note expressing interest in a job'"
-            value={promptInput}
-            onChange={(e) => setPromptInput(e.target.value)}
-          />
-          <input
-            type="text"
-            name="connectorPhrase"
-            placeholder="connecting phrase e.g. 'as though you yourself are a'"
-            value={connectorPhraseInput}
-            onChange={(e) => setConnectorPhraseInput(e.target.value)}
-          />
-          <input
-            type="text"
             name="topic"
-            placeholder="topic or role e.g. 'professional drag queen'"
+            placeholder="Enter a topic (optional)"
             value={topicInput}
             onChange={(e) => setTopicInput(e.target.value)}
           />
@@ -94,13 +64,14 @@ export default function Home() {
               id="is_work_related"
               name="is_work_related"
               value="is_work_related"
-              onChange={handleChange}
             />
             <label htmlFor="is_work_related">Work Related?</label>
           </div>
         </form>
-        <div className={styles.result}>{result}</div>
+        <div className={styles.result}>{html_result}</div>
       </main>
+      <p>Agex is a biotech...</p> <table> <thead> <tr> <th>Category</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>Company Name</td> <td>Agex Therapeutics, Inc.</td> </tr> <tr> <td>Industry</td> <td>Biotechnology</td> </tr> <tr> <td>Focus</td> <td>Developing therapies to address aging-related diseases</td> </tr> <tr> <td>Founded</td> <td>2017</td> </tr> <tr> <td>Headquarters</td> <td>Alameda, California</td> </tr> <tr> <td>CEO</td> <td>Dr. Greg Bailey</td> </tr> <tr> <td>Products</td> <td>- AgeX Biomedical, Inc. (a subsidiary of Agex) develops regenerative cell therapies for age-related degenerative diseases&lt;br&gt;- PureStem® and UniverCyte™ technologies for the manufacture of cell therapies</td> </tr> <tr> <td>Partnerships</td> <td>- Collaboration with Lineage Cell Therapeutics, Inc. to develop cell therapies for age-related macular degeneration&lt;br&gt;- Collaboration with Juvenescence Limited to develop therapies for age-related diseases</td> </tr> <tr> <td>Stock Exchange</td> <td>NYSE American</td> </tr> <tr> <td>Ticker Symbol</td> <td>AGE</td> </tr> </tbody> </table> 
     </div>
+    
   );
 }
