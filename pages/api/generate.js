@@ -1,6 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
 import { getWorkPlay } from "./db_queries";
-// import Markdown from 'markdown-it';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -17,25 +16,39 @@ export default async function (req, res) {
     });
     return;
   }
-  const topic = req.body.topic || "";
-  if (topic.trim().length === 0) {
-    // az what is this fitler criteria?
+
+
+  const context = req.body.context || "";
+  if (context.trim().length === 0) {
+    // az what should this fitler criteria be? if empty?
     res.status(400).json({
       error: {
-        message: "Please enter a valid topic",
+        message: "Response 400 or empty context",
+      },
+    });
+    return;
+  }  
+
+  const topic = req.body.topic || "";
+  if (topic.trim().length === 0) {
+    // az what should this fitler criteria be? if empty?
+    res.status(400).json({
+      error: {
+        message: "Response 400 or empty topic",
       },
     });
     return;
   }
 
+  console.log(`INPUT: ${context} ${topic}`)
+
+
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0.01,
-      messages: [{ role: "user", content: generatePrompt(topic) }],
+      messages: [{ role: "user", content: generatePrompt(topic, context) }],
     });
-
-    // json_dump | is_work_related | prompt_vars | prompt | response
 
     const dbRes = await getWorkPlay(req, res, completion);
     console.log("dbRes, sending real res right after.. ", dbRes);
@@ -59,8 +72,10 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(topic) {
+function generatePrompt(topic, context) {
   const capitalizedTopic =
     topic[0].toUpperCase() + topic.slice(1).toLowerCase();
-  return `give a description in the form of a bulleted list or table with relevant columns about ${capitalizedTopic}`;
+  const capitalizedContext =
+    context[0].toUpperCase() + context.slice(1).toLowerCase();
+  return `${capitalizedContext} ${capitalizedTopic}`;
 }

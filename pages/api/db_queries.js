@@ -6,6 +6,7 @@ const pool = new Pool({
   port: 5432,
 });
 
+// experiment in SQL db called WorkPlay
 // id | json_dump | is_work_related | prompt_vars | prompt | response
 const getWorkPlay = async (request, response, completion) => {
   console.log("completion data ", completion.data.choices[0].message.content);
